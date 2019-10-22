@@ -1,0 +1,10 @@
+[
+    {
+        "name": "composite1.html",
+        "templates": [
+            "import1.html",
+            "part1.html",
+            "part2.html"
+        ]
+    }
+]
