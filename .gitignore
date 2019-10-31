@@ -1,3 +1,4 @@
 #ignore following file patterns:
 *.log
 sched/.*
+.*
