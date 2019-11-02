@@ -3,7 +3,7 @@
 ROOT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
 FILES=*.sh
-SP_FILE=.scheduler.properties
+SP_FILE=.scheduler.json
 
 #
 # Check ALL of the directories exist. Create if not.
@@ -61,26 +61,31 @@ fi
 #
 # Add properties
 #
-echo "##" >> $SCHED_PROPERTIES
-echo "# "$SP_FILE" file created:"`date +%Y-%m-%dT%H:%M:%S` >> $SCHED_PROPERTIES
-echo "##" >> $SCHED_PROPERTIES
-echo "" >> $SCHED_PROPERTIES
-echo "batch.scheduler.path=$SCHED_PATH" >> $SCHED_PROPERTIES
-echo "batch.pending.path=$PENDING_PATH" >> $SCHED_PROPERTIES
-echo "batch.queue.path=$QUEUE_PATH" >> $SCHED_PROPERTIES
-echo "batch.status.path=$STATUS_PATH" >> $SCHED_PROPERTIES
-echo "batch.logs.path=$LOG_PATH" >> $SCHED_PROPERTIES
-echo "batch.running.path=$RUNNING_PATH" >> $SCHED_PROPERTIES
-echo "" >> $SCHED_PROPERTIES
-
+echo "{" >> $SCHED_PROPERTIES
+echo "\"scheduler\":" >> $SCHED_PROPERTIES
+echo "  {" >> $SCHED_PROPERTIES
+echo "    \"created\":\"`date +%Y-%m-%dT%H:%M:%S`\"," >> $SCHED_PROPERTIES
+echo "    \"scheduler\":\""$SCHED_PATH"\"," >> $SCHED_PROPERTIES
+echo "    \"pending\":\""$PENDING_PATH"\"," >> $SCHED_PROPERTIES
+echo "    \"queue\":\""$QUEUE_PATH"\"," >> $SCHED_PROPERTIES
+echo "    \"status\":\""$STATUS_PATH"\"," >> $SCHED_PROPERTIES
+echo "    \"logs\":\""$LOG_PATH"\"," >> $SCHED_PROPERTIES
+echo "    \"running\":\""$RUNNING_PATH"\"" >> $SCHED_PROPERTIES
+echo "  }," >> $SCHED_PROPERTIES
+echo "\"tasks\":{" >> $SCHED_PROPERTIES
 FILES=*.sh
 cd $PENDING_PATH 
 ID=0
 for f in $FILES; do
-    echo "batch.option.$ID="$PENDING_PATH/$f >> $SCHED_PROPERTIES
+    echo "    \"task_"$ID"\":\""$f"\"," >> $SCHED_PROPERTIES
     let ID++
 done
-echo "" >> $SCHED_PROPERTIES
+echo "    \"_D_"$ID"\":\"dummy"\" >> $SCHED_PROPERTIES
+echo "  }" >> $SCHED_PROPERTIES
+echo "}" >> $SCHED_PROPERTIES
+
+
+# echo "" >> $SCHED_PROPERTIES
 #
 # 
 #
